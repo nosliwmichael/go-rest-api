@@ -21,7 +21,7 @@ type (
 		server http.Server
 		stop   chan os.Signal
 
-		userRepo    repo.UserRepo
+		userRepo    *repo.UserRepo
 		userService service.UserService
 		userHandler handler.UserHandler
 	}

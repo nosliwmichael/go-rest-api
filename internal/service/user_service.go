@@ -2,31 +2,28 @@ package service
 
 import (
 	"github.com/nosliwmichael/go-rest-api/internal/model"
-	"github.com/nosliwmichael/go-rest-api/internal/repo"
 )
 
 type (
-	UserService interface {
+	UserRepo interface {
 		AddUser(model.User) error
 		GetUser(string) (*model.User, error)
 	}
-	userService struct {
-		userRepo repo.UserRepo
+	UserService struct {
+		userRepo UserRepo
 	}
 )
 
-var _ UserService = userService{}
-
-func NewUserService(userRepo repo.UserRepo) userService {
-	return userService{
+func NewUserService(userRepo UserRepo) UserService {
+	return UserService{
 		userRepo: userRepo,
 	}
 }
 
-func (r userService) AddUser(user model.User) error {
+func (r UserService) AddUser(user model.User) error {
 	return r.userRepo.AddUser(user)
 }
 
-func (r userService) GetUser(name string) (*model.User, error) {
+func (r UserService) GetUser(name string) (*model.User, error) {
 	return r.userRepo.GetUser(name)
 }

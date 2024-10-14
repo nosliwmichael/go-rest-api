@@ -7,33 +7,25 @@ import (
 	"github.com/nosliwmichael/go-rest-api/internal/model"
 )
 
-type (
-	UserRepo interface {
-		AddUser(model.User) error
-		GetUser(string) (*model.User, error)
-	}
-	userRepo struct {
-		users map[string]*model.User
-		mu    sync.Mutex
-	}
-)
+type UserRepo struct {
+	users map[string]*model.User
+	mu    sync.Mutex
+}
 
-var _ UserRepo = (*userRepo)(nil)
-
-func NewUserRepo() *userRepo {
-	return &userRepo{
+func NewUserRepo() *UserRepo {
+	return &UserRepo{
 		users: make(map[string]*model.User),
 	}
 }
 
-func (r *userRepo) AddUser(user model.User) error {
+func (r *UserRepo) AddUser(user model.User) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	r.users[user.Name] = &user
 	return nil
 }
 
-func (r *userRepo) GetUser(name string) (u *model.User, err error) {
+func (r *UserRepo) GetUser(name string) (u *model.User, err error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	u, exists := r.users[name]

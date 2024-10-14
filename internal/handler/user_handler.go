@@ -6,35 +6,32 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/nosliwmichael/go-rest-api/internal/model"
-	"github.com/nosliwmichael/go-rest-api/internal/service"
 )
 
 type (
-	UserHandler interface {
-		AddUser(w http.ResponseWriter, r *http.Request)
-		GetUser(w http.ResponseWriter, r *http.Request)
+	UserService interface {
+		AddUser(model.User) error
+		GetUser(string) (*model.User, error)
 	}
-	userHandler struct {
-		userService service.UserService
+	UserHandler struct {
+		userService UserService
 	}
 )
 
-var _ UserHandler = userHandler{}
-
-func NewUserHandler(userService service.UserService) userHandler {
-	return userHandler{
+func NewUserHandler(userService UserService) UserHandler {
+	return UserHandler{
 		userService: userService,
 	}
 }
 
-func (h userHandler) AddUser(w http.ResponseWriter, r *http.Request) {
+func (h UserHandler) AddUser(w http.ResponseWriter, r *http.Request) {
 	var user model.User
 	json.NewDecoder(r.Body).Decode(&user)
 	h.userService.AddUser(user)
 	w.WriteHeader(http.StatusOK)
 }
 
-func (h userHandler) GetUser(w http.ResponseWriter, r *http.Request) {
+func (h UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 	if user, err := h.userService.GetUser(name); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
