@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/gorilla/mux"
 	"github.com/nosliwmichael/go-rest-api/internal/model"
 )
 
@@ -32,7 +31,7 @@ func (h UserHandler) AddUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
-	name := mux.Vars(r)["name"]
+	name := r.PathValue("name")
 	if user, err := h.userService.GetUser(name); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	} else {

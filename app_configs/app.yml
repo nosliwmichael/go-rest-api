@@ -1,5 +1,7 @@
 app-name: "go-rest-api"
 address: ":8080"
-endpoints:
-  user: "/user"
-  user-by-name: "/user/{name}"
+api:
+  context-root: "/go-rest-api"
+  endpoints:
+    user: "/user"
+    user-by-name: "/user/{name}"

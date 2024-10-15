@@ -46,9 +46,10 @@ func (app *App) createUserService() {
 
 func (app *App) createRouter() {
 	r := mux.NewRouter()
+	r.PathPrefix(app.config.Api.ContextRoot)
 	r.Use(middleware.DefaultHeaderMiddleware, middleware.LogMiddleware)
-	r.HandleFunc(app.config.Endpoints.User, app.userHandler.AddUser).Methods("POST")
-	r.HandleFunc(app.config.Endpoints.UserByName, app.userHandler.GetUser).Methods("GET")
+	r.HandleFunc(app.config.Api.Endpoints.User, app.userHandler.AddUser).Methods("POST")
+	r.HandleFunc(app.config.Api.Endpoints.UserByName, app.userHandler.GetUser).Methods("GET")
 	app.server = http.Server{Addr: app.config.Address, Handler: r}
 }
 

@@ -8,12 +8,15 @@ import (
 
 type (
 	Config struct {
-		AppName   string `yaml:"app-name"`
-		Address   string `yaml:"address"`
-		Endpoints struct {
-			User       string `yaml:"user"`
-			UserByName string `yaml:"user-by-name"`
-		} `yaml:"endpoints"`
+		AppName string `yaml:"app-name"`
+		Address string `yaml:"address"`
+		Api     struct {
+			ContextRoot string `yaml:"context-root"`
+			Endpoints   struct {
+				User       string `yaml:"user"`
+				UserByName string `yaml:"user-by-name"`
+			} `yaml:"endpoints"`
+		} `yaml:"api"`
 	}
 )
 
