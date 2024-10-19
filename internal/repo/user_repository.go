@@ -1,36 +1,28 @@
 package repo
 
 import (
-	"errors"
-	"sync"
-
+	"database/sql"
 	"github.com/nosliwmichael/go-rest-api/internal/model"
+	"github.com/nosliwmichael/go-rest-api/internal/repo/queries"
 )
 
 type UserRepo struct {
-	users map[string]*model.User
-	mu    sync.Mutex
+	db *sql.DB
 }
 
-func NewUserRepo() *UserRepo {
-	return &UserRepo{
-		users: make(map[string]*model.User),
-	}
+func NewUserRepo(db *sql.DB) UserRepo {
+	return UserRepo{db: db}
 }
 
-func (r *UserRepo) AddUser(user model.User) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	r.users[user.Name] = &user
-	return nil
+func (r UserRepo) AddUser(user model.User) error {
+	_, err := r.db.Exec(queries.InsertUser, user.Username, user.FirstName, user.LastName, user.Age)
+	return err
 }
 
-func (r *UserRepo) GetUser(name string) (u *model.User, err error) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	u, exists := r.users[name]
-	if !exists {
-		err = errors.New("user not found")
-	}
-	return u, err
+func (r UserRepo) GetUser(id string) (u *model.User, err error) {
+	row := r.db.QueryRow(queries.SelectUserById, id)
+	var user model.User
+	err = row.Scan(&user.Id, &user.Username, &user.FirstName, &user.LastName, &user.Age)
+	u = &user
+	return
 }

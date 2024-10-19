@@ -1,6 +1,11 @@
 package model
 
+// TODO: Separate DTO from Entity
+
 type User struct {
-	Name string `json:"name"`
-	Age  int    `json:"age"`
+	Id        string `json:"id" db:"ID"`
+	Username  string `json:"username" db:"USERNAME"`
+	FirstName string `json:"firstName" db:"FIRST_NAME"`
+	LastName  string `json:"lastName" db:"LAST_NAME"`
+	Age       int    `json:"age" db:"AGE"`
 }

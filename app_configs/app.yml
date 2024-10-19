@@ -1,7 +1,17 @@
 app-name: "go-rest-api"
-address: ":8080"
+
+http-server:
+  address: ":8080"
+  read-timeout: '5s'
+  write-timeout: '5s'
+
 api:
   context-root: "/go-rest-api"
   endpoints:
     user: "/user"
-    user-by-name: "/user/{name}"
+    user-by-id: "/user/{id}"
+
+database:
+  host: '127.0.0.1'
+  port: 3306
+  sid: 'go_rest_api'

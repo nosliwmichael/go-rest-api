@@ -24,6 +24,6 @@ func (r UserService) AddUser(user model.User) error {
 	return r.userRepo.AddUser(user)
 }
 
-func (r UserService) GetUser(name string) (*model.User, error) {
-	return r.userRepo.GetUser(name)
+func (r UserService) GetUser(id string) (*model.User, error) {
+	return r.userRepo.GetUser(id)
 }

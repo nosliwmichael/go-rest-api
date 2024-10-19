@@ -2,6 +2,8 @@ package handler
 
 import (
 	"encoding/json"
+	"github.com/gorilla/mux"
+	"log"
 	"net/http"
 
 	"github.com/nosliwmichael/go-rest-api/internal/model"
@@ -25,17 +27,29 @@ func NewUserHandler(userService UserService) UserHandler {
 
 func (h UserHandler) AddUser(w http.ResponseWriter, r *http.Request) {
 	var user model.User
-	json.NewDecoder(r.Body).Decode(&user)
-	h.userService.AddUser(user)
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf(err.Error())
+	}
+	err = h.userService.AddUser(user)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf(err.Error())
+	}
 	w.WriteHeader(http.StatusOK)
 }
 
 func (h UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
-	name := r.PathValue("name")
-	if user, err := h.userService.GetUser(name); err != nil {
+	id := mux.Vars(r)["id"]
+	if user, err := h.userService.GetUser(id); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		log.Printf(err.Error())
 	} else {
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(user)
+		err = json.NewEncoder(w).Encode(user)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			log.Printf("Failed to write body: %+v", err)
+		}
 	}
 }
